@@ -8,21 +8,9 @@ import {
   View,
   Modal,
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import SignInPopUp from '../Authentication/SignIn.Popup';
-import {fbIcon, gIcon, wIcon} from '../../../assets/index';
-import {color13, color14, color15, color3} from '../ColorScheme';
-import auth from '@react-native-firebase/auth';
-import database from '@react-native-firebase/database';
-import AIcon from 'react-native-vector-icons/AntDesign';
-import EIcon from 'react-native-vector-icons/Entypo';
-import {ConsecutiveScore} from '../ContextList';
-import BackButton from '../BackButton';
-import {Quiz_Ref, Badges_Ref} from '../DatabaseRefrences';
-import AssignBadges from './AssignBadges';
-import Popup from '../Popups/Popup';
 
-// import VIcon from 'react-native-vector-icons/Entypo';
+import {color13, color14, color15, color3} from '../ColorScheme';
+
 
 export default class ScoreCard extends Component {
   constructor(props) {
@@ -37,92 +25,6 @@ export default class ScoreCard extends Component {
     this.countConsecutiveFive = false;
   }
   componentDidMount() {
-    const user = auth().currentUser;
-    //  const db = database().ref('/TEST');
-    //  db.remove();
-
-    if (user!== null) {
-      const Record_In = Quiz_Ref.push();
-      const IndividualScoreRef =    database().ref('/users/individualscore/' + user.uid);
-      console.log('Auto generated key: ', Record_In.key);
-      Record_In.set({
-        uid: user.uid,
-        level: this.props.category,
-        date: new Date().getDate(),
-        time: new Date().getTime(),
-         month : new Date().getMonth() + 1,
-         year : new Date().getFullYear(),
-        score: this.props.score,
-      }).then(() => {
-        Quiz_Ref.once('value').then(snapshot => {
-          // console.log('UPDATERD from score card->',snapshot.val())
-        });
-      });
-      IndividualScoreRef
-      .once('value')
-      .then(snapshot => {
-        
-        const userScoreNode = snapshot.val();
-        console.log('/individualusers/score: ', userScoreNode);
-        if (userScoreNode) {
-          console.log('level->',this.props.category)
-          if(this.props.category == 0){
-
-            IndividualScoreRef
-              .update({
-                novice: this.props.score+userScoreNode.novice,
-              })
-              .then(() => console.log('individual Data updated.'));
-          } else if(this.props.category ==1){
-            IndividualScoreRef
-              .update({
-                casual: this.props.score+userScoreNode.casual,
-              })
-              .then(() => console.log('individual Data updated.'));
-          } else if(this.props.category == 2){
-            IndividualScoreRef
-              .update({
-                pro: this.props.score+userScoreNode.pro,
-              })
-              .then(() => console.log('individual Data updated.'));
-          } else if(this.props.category== 3){
-            IndividualScoreRef
-            .update({
-              advance: this.props.score+userScoreNode.advance,
-            })
-            .then(() => 
-            {
-              console.log('individual Data updated.')
-              IndividualScoreRef
-              .once('value')
-              .then(snapshot => {
-                
-                const userScoreNode = snapshot.val();
-                console.log('/individualusers/score--advance: ', userScoreNode);
-                if( userScoreNode.advance % 50 == 0){
-                  this.setState({
-                    headOverTo9stacks:true
-                  })
-                }
-              })
-              
-            });
-          }
-
-        } else {
-          IndividualScoreRef
-            .set({
-              novice: 0,
-              casual: 0,
-              pro: 0,
-              advance: 0,
-            })
-            .then(() => console.log('individual Data set.'));
-        }
-      })
-    }else{
-      console.log('NOTHING')
-    }
   }
   closePopup() {
     console.log('closwed');
@@ -256,7 +158,7 @@ export default class ScoreCard extends Component {
           buttonMethod = {this.closePopup.bind(this)} 
           ></Popup>
         ) : null}
-        <BackButton navigation={this.props.navigation} />
+        {/* <BackButton navigation={this.props.navigation} /> */}
       </View>
     );
   }
@@ -351,51 +253,29 @@ export default class ScoreCard extends Component {
 
 
     if (this.props.score === 5) {
-      this.state.quizPopUp===false?
-      this.checkBadgeDB(5):(console.log('heyehey'));
-      console.log('this.context', this.context);
+   
       return this.scorecard('Congratulations!');
     } 
     else if (this.props.score === 0) {
-      // global.consecutiveScore=[];
-      // this.context = [[], [], [], []];
-      this.state.quizPopUp===false?
-      this.checkBadgeDB(0):null;
+  
       return this.scorecard('You have long way to go!');
     } 
     else if (this.props.score === 1 || this.props.score === 2) {
-      // global.consecutiveScore=[];
-      this.context.noviceScore5= 0;
-      this.context.proScore5=0,
-      this.context.casualScore5=0,
-      this.context.legendScore5=0,
-      this.context.noviceScore0=0,
-      this.context.proScore0=0,
-      this.context.casualScore0=0,
-      this.context.egendScore0=0
+
       return this.scorecard('Better Luck Next Time!');
     } else {
-      // global.consecutiveScore = [];
-      this.context.noviceScore5= 0;
-      this.context.proScore5=0,
-      this.context.casualScore5=0,
-      this.context.legendScore5=0,
-      this.context.noviceScore0=0,
-      this.context.proScore0=0,
-      this.context.casualScore0=0,
-      this.context.egendScore0=0
+      
      
       console.log('contextttt->',this.context)
       return this.scorecard('Well Done!');
     }
   }
 }
-ScoreCard.contextType = ConsecutiveScore;
 const styles = StyleSheet.create({
   button: {
     backgroundColor: color13,
-    height: RFValue(40),
-    width: RFValue(150),
+    height: 40,
+    width: 150,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
@@ -411,7 +291,7 @@ const styles = StyleSheet.create({
   heading: {
     color: "black",
    fontFamily: "Lato-BoldItalic",
-    fontSize: RFValue(19),
+    fontSize: 19,
   },
   scoreboard: {
     backgroundColor: "#000320",
@@ -428,13 +308,13 @@ const styles = StyleSheet.create({
     fontFamily: "Lato-Bold",
     // fontFamily: 'Roboto',
     // fontWeight: 'bold',
-    fontSize: RFValue(18),
+    fontSize: 18,
   },
   score: {
     color: "white",
     // fontFamily: 'Roboto',
     fontFamily: "Lato-Bold",
-    fontSize: RFValue(80),
+    fontSize: 80,
     bottom: '5%',
     textAlign: 'center',
     // backgroundColor:'green',
@@ -443,7 +323,7 @@ const styles = StyleSheet.create({
     color: "white",
     // fontFamily:'Lato',
     fontFamily: "Lato-Bold",
-    fontSize: RFValue(60),
+    fontSize: 60,
     textAlign: 'center',
     // backgroundColor:'yellow',
   },
@@ -460,7 +340,7 @@ const styles = StyleSheet.create({
     //  bordertop
   },
   share_icons: {
-    width: RFValue(40),
-    height: RFValue(40),
+    width: 40,
+    height: 40,
   },
 });

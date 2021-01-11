@@ -1,19 +1,13 @@
 import React, {Component} from 'react';
 import {Text, Thumbnail, View, Card, Button, CardItem, Body} from 'native-base';
-
-import TimerButton from './Quiz.Timer';
 import QuizTimerNew from './Quiz.New.Timer';
 import {TouchableOpacity, ScrollView, Image, Modal} from 'react-native';
-import auth from '@react-native-firebase/auth';
-import database from '@react-native-firebase/database';
-import {RFValue} from 'react-native-responsive-fontsize';
 import EIcon from 'react-native-vector-icons/Entypo';
 import {StyleSheet} from 'react-native';
 import ScoreCard from './Quiz.ScoreCard';
-import {color1, color3, color4, color5, color11, color6, color17, color18} from '../ColorScheme';
-import BackButton from '../BackButton';
-import {ScoreRef, NewScoreRef} from '../DatabaseRefrences';
+import {color11, color17, color18} from '../ColorScheme';
 import AIcon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class QuizNewStyle extends Component {
   constructor(props) {
@@ -231,39 +225,10 @@ export default class QuizNewStyle extends Component {
     }, 100);
   }
   generateScoreCard() {
-    // database().ref('/users')
-    //     .remove();
-    var user = auth().currentUser;
+
 
     var userPresent = false;
-    if (user !== null) {
-      const ScoreRef = database().ref('/users/score/' + user.uid);
 
-      userPresent = true;
-      ScoreRef.once('value').then(snapshot => {
-        const userScoreNode = snapshot.val();
-        console.log('/users/score: ', userScoreNode);
-        if (userScoreNode) {
-          database()
-            .ref('/users/score/' + user.uid)
-            .update({
-              score: this.score + userScoreNode.score,
-            })
-            .then(() => console.log('Data updated.'));
-        } else {
-          ScoreRef.set({
-            score: this.score,
-            date: new Date().getDate(),
-            time: new Date().getTime(),
-            year: new Date().getFullYear(),
-            month: new Date().getMonth() + 1,
-          }).then(() => console.log('Data set.'));
-        }
-      });
-    } else {
-      console.log('USER', user);
-      console.log('sign in first');
-    }
 
     const scoreCard = (
       <ScoreCard
@@ -279,167 +244,167 @@ export default class QuizNewStyle extends Component {
     //  database()
     //     .ref('/Score')
     //     .remove();
-    var user = auth().currentUser;
-    var userPresent = false;
-    if (user !== null) {
-      var scoreObject = [];
-      userPresent = true;
-      console.log('SCORECARD', scoreObject);
+    // var user = auth().currentUser;
+    // var userPresent = false;
+    // if (user !== null) {
+    //   var scoreObject = [];
+    //   userPresent = true;
+    //   console.log('SCORECARD', scoreObject);
 
-      // query to select score details from current user
-      database()
-        .ref('/Score')
-        .orderByChild('email')
-        .equalTo(user.email)
-        .once('value')
-        .then(snapshot => {
-          var curUser = snapshot.val();
-          // console.log('Selected User data: ', curUser);
-          if (curUser === null) {
-            // user is playing for first time
-            console.log('NEW');
-            if (this.props.id === 0) {
-              scoreObject = [
-                {noviceScore: this.score},
-                {casualScore: 0},
-                {proScore: 0},
-                {legendScore: 0},
-                {email: user.email},
-              ];
-            } else if (this.props.id === 1) {
-              scoreObject = [
-                {noviceScore: 0},
-                {casualScore: this.score},
-                {proScore: 0},
-                {legendScore: 0},
-                {email: user.email},
-              ];
-            } else if (this.props.id === 2) {
-              scoreObject = [
-                {noviceScore: 0},
-                {casualScore: 0},
-                {proScore: this.score},
-                {legendScore: 0},
-                {email: user.email},
-              ];
-            } else if (this.props.id === 3) {
-              scoreObject = [
-                {noviceScore: 0},
-                {casualScore: 0},
-                {proScore: 0},
-                {legendScore: this.score},
-                {email: user.email},
-              ];
-            }
-            database()
-              .ref('/Score')
-              .push({
-                scoreObject: scoreObject,
-                email: user.email,
-              })
-              .then(() => {
-                // console.log('score saved');
-                database()
-                  .ref('/Score')
-                  .once('value')
-                  .then(snapshot => {
-                    // console.log('Score data: ', snapshot.val());
-                  });
-              });
-          } else {
-            console.log('score exist');
+    //   // query to select score details from current user
+    //   database()
+    //     .ref('/Score')
+    //     .orderByChild('email')
+    //     .equalTo(user.email)
+    //     .once('value')
+    //     .then(snapshot => {
+    //       var curUser = snapshot.val();
+    //       // console.log('Selected User data: ', curUser);
+    //       if (curUser === null) {
+    //         // user is playing for first time
+    //         console.log('NEW');
+    //         if (this.props.id === 0) {
+    //           scoreObject = [
+    //             {noviceScore: this.score},
+    //             {casualScore: 0},
+    //             {proScore: 0},
+    //             {legendScore: 0},
+    //             {email: user.email},
+    //           ];
+    //         } else if (this.props.id === 1) {
+    //           scoreObject = [
+    //             {noviceScore: 0},
+    //             {casualScore: this.score},
+    //             {proScore: 0},
+    //             {legendScore: 0},
+    //             {email: user.email},
+    //           ];
+    //         } else if (this.props.id === 2) {
+    //           scoreObject = [
+    //             {noviceScore: 0},
+    //             {casualScore: 0},
+    //             {proScore: this.score},
+    //             {legendScore: 0},
+    //             {email: user.email},
+    //           ];
+    //         } else if (this.props.id === 3) {
+    //           scoreObject = [
+    //             {noviceScore: 0},
+    //             {casualScore: 0},
+    //             {proScore: 0},
+    //             {legendScore: this.score},
+    //             {email: user.email},
+    //           ];
+    //         }
+    //         database()
+    //           .ref('/Score')
+    //           .push({
+    //             scoreObject: scoreObject,
+    //             email: user.email,
+    //           })
+    //           .then(() => {
+    //             // console.log('score saved');
+    //             database()
+    //               .ref('/Score')
+    //               .once('value')
+    //               .then(snapshot => {
+    //                 // console.log('Score data: ', snapshot.val());
+    //               });
+    //           });
+    //       } else {
+    //         console.log('score exist');
 
-            for (const key in curUser) {
-              // update user score
-              // console.log('cur user', curUser[key]);
-              if (this.props.id === 0) {
-                // if (this.score > curUser[key].scoreObject[0].noviceScore) {
-                scoreObject = [
-                  {
-                    noviceScore:
-                      this.score + curUser[key].scoreObject[0].noviceScore,
-                  },
-                  {casualScore: curUser[key].scoreObject[1].casualScore},
-                  {proScore: curUser[key].scoreObject[2].proScore},
-                  {legendScore: curUser[key].scoreObject[3].legendScore},
-                  {email: user.email},
-                ];
-                // } else {
-                //   scoreObject = oldScoreObject;
-                // }
-              } else if (this.props.id === 1) {
-                // if (this.score > curUser[key].scoreObject[1].casualScore) {
-                scoreObject = [
-                  {noviceScore: curUser[key].scoreObject[0].noviceScore},
-                  {
-                    casualScore:
-                      this.score + curUser[key].scoreObject[1].casualScore,
-                  },
-                  {proScore: curUser[key].scoreObject[2].proScore},
-                  {legendScore: curUser[key].scoreObject[3].legendScore},
-                  {email: user.email},
-                ];
-                // } else {
-                //   scoreObject = oldScoreObject;
-                // }
-              } else if (this.props.id === 2) {
-                // if (this.score > curUser[key].scoreObject[2].proScore) {
-                scoreObject = [
-                  {noviceScore: curUser[key].scoreObject[0].noviceScore},
-                  {casualScore: curUser[key].scoreObject[1].casualScore},
-                  {proScore: this.score + curUser[key].scoreObject[2].proScore},
-                  {legendScore: curUser[key].scoreObject[3].legendScore},
-                  {email: user.email},
-                ];
-                // } else {
-                //   scoreObject = oldScoreObject;
-                // }
-              } else if (this.props.id === 3) {
-                // if (this.score > curUser[key].scoreObject[3].legendScore) {
-                scoreObject = [
-                  {noviceScore: curUser[key].scoreObject[0].noviceScore},
-                  {casualScore: curUser[key].scoreObject[1].casualScore},
-                  {proScore: curUser[key].scoreObject[2].proScore},
-                  {
-                    legendScore:
-                      this.score + curUser[key].scoreObject[3].legendScore,
-                  },
-                  {email: user.email},
-                ];
-                // } else {
-                //   scoreObject = oldScoreObject;
-                // }
-              }
-              // console.log('score card now', curUser[key]);
-              // console.log('key', key);
-              database()
-                .ref('/Score')
-                .child(key)
-                .update({scoreObject: scoreObject})
-                .then(() => {
-                  database()
-                    .ref('/Score')
-                    .once('value')
-                    .then(snapshot => {
-                      // console.log('Score data: ', snapshot.val());
-                    });
-                });
-            }
-          }
-        });
-    } else {
-      console.log('sign in first');
-    }
+    //         for (const key in curUser) {
+    //           // update user score
+    //           // console.log('cur user', curUser[key]);
+    //           if (this.props.id === 0) {
+    //             // if (this.score > curUser[key].scoreObject[0].noviceScore) {
+    //             scoreObject = [
+    //               {
+    //                 noviceScore:
+    //                   this.score + curUser[key].scoreObject[0].noviceScore,
+    //               },
+    //               {casualScore: curUser[key].scoreObject[1].casualScore},
+    //               {proScore: curUser[key].scoreObject[2].proScore},
+    //               {legendScore: curUser[key].scoreObject[3].legendScore},
+    //               {email: user.email},
+    //             ];
+    //             // } else {
+    //             //   scoreObject = oldScoreObject;
+    //             // }
+    //           } else if (this.props.id === 1) {
+    //             // if (this.score > curUser[key].scoreObject[1].casualScore) {
+    //             scoreObject = [
+    //               {noviceScore: curUser[key].scoreObject[0].noviceScore},
+    //               {
+    //                 casualScore:
+    //                   this.score + curUser[key].scoreObject[1].casualScore,
+    //               },
+    //               {proScore: curUser[key].scoreObject[2].proScore},
+    //               {legendScore: curUser[key].scoreObject[3].legendScore},
+    //               {email: user.email},
+    //             ];
+    //             // } else {
+    //             //   scoreObject = oldScoreObject;
+    //             // }
+    //           } else if (this.props.id === 2) {
+    //             // if (this.score > curUser[key].scoreObject[2].proScore) {
+    //             scoreObject = [
+    //               {noviceScore: curUser[key].scoreObject[0].noviceScore},
+    //               {casualScore: curUser[key].scoreObject[1].casualScore},
+    //               {proScore: this.score + curUser[key].scoreObject[2].proScore},
+    //               {legendScore: curUser[key].scoreObject[3].legendScore},
+    //               {email: user.email},
+    //             ];
+    //             // } else {
+    //             //   scoreObject = oldScoreObject;
+    //             // }
+    //           } else if (this.props.id === 3) {
+    //             // if (this.score > curUser[key].scoreObject[3].legendScore) {
+    //             scoreObject = [
+    //               {noviceScore: curUser[key].scoreObject[0].noviceScore},
+    //               {casualScore: curUser[key].scoreObject[1].casualScore},
+    //               {proScore: curUser[key].scoreObject[2].proScore},
+    //               {
+    //                 legendScore:
+    //                   this.score + curUser[key].scoreObject[3].legendScore,
+    //               },
+    //               {email: user.email},
+    //             ];
+    //             // } else {
+    //             //   scoreObject = oldScoreObject;
+    //             // }
+    //           }
+    //           // console.log('score card now', curUser[key]);
+    //           // console.log('key', key);
+    //           database()
+    //             .ref('/Score')
+    //             .child(key)
+    //             .update({scoreObject: scoreObject})
+    //             .then(() => {
+    //               database()
+    //                 .ref('/Score')
+    //                 .once('value')
+    //                 .then(snapshot => {
+    //                   // console.log('Score data: ', snapshot.val());
+    //                 });
+    //             });
+    //         }
+    //       }
+    //     });
+    // } else {
+    //   console.log('sign in first');
+    // }
 
-    const scoreCard = (
-      <ScoreCard
-        score={this.score}
-        navigation={this.props.navigation}
-        user={userPresent}
-        category={this.props.id}
-      />
-    );
-    return scoreCard;
+    // const scoreCard = (
+    //   <ScoreCard
+    //     score={this.score}
+    //     navigation={this.props.navigation}
+    //     user={userPresent}
+    //     category={this.props.id}
+    //   />
+    // );
+    // return scoreCard;
   }
   getImages(imagesArray) {
     return (
@@ -454,8 +419,8 @@ export default class QuizNewStyle extends Component {
           <Image
             source={img}
             style={{
-              width: RFValue(30),
-              height: RFValue(35),
+              width: 30,
+              height: 35,
               marginRight: '2%',
               borderWidth: 1,
               borderColor: 'black',
@@ -581,10 +546,11 @@ export default class QuizNewStyle extends Component {
                   justifyContent:'center',
                   alignItems:'center'
                 }}>
+                  {/* <Icon name="rocket" size={30} color="#900" /> */}
                 <AIcon
                   name="arrowleft"
                   color={'white'}
-                  size={RFValue(30)}
+                  size={30}
                   // style={{marginLeft: '3%'}}
                   onPress={() => {
                     this.props.navigation.goBack();
@@ -603,7 +569,7 @@ export default class QuizNewStyle extends Component {
               <Text
                 style={{
                   color: 'white',
-                  fontSize: RFValue(25),
+                  fontSize: 25,
                   alignSelf:'center',
                   // fontWeight: 'bold',
                   fontFamily: 'Lato-Black',
@@ -625,7 +591,7 @@ export default class QuizNewStyle extends Component {
                 <Text
                   style={{
                     color: 'white',
-                    fontSize: RFValue(28),
+                    fontSize: 28,
                   
                     fontFamily: 'Lato-Black',
                     // width:'80%'
@@ -657,27 +623,27 @@ export default class QuizNewStyle extends Component {
               <EIcon
                 name={this.state.firstTrack}
                 color={this.state.firstTrackColor}
-                size={RFValue(25)}
+                size={25}
               />
               <EIcon
                 name={this.state.secondTrack}
                 color={this.state.secondtTrackColor}
-                size={RFValue(25)}
+                size={25}
               />
               <EIcon
                 name={this.state.thirdTrack}
                 color={this.state.thirdTrackColor}
-                size={RFValue(25)}
+                size={25}
               />
               <EIcon
                 name={this.state.fourthTrack}
                 color={this.state.fourthTrackColor}
-                size={RFValue(25)}
+                size={25}
               />
               <EIcon
                 name={this.state.fifthTrack}
                 color={this.state.fifthTrackColor}
-                size={RFValue(25)}
+                size={25}
               />
             </View>
             {/* ques */}
@@ -695,7 +661,7 @@ export default class QuizNewStyle extends Component {
                   color: 'white',
 
                   textAlign: 'center',
-                  fontSize: RFValue(15),
+                  fontSize: 15,
 
                   fontFamily: 'Lato-Black',
                   letterSpacing: 2,
@@ -769,7 +735,7 @@ export default class QuizNewStyle extends Component {
               ) : (
                 <Text
                   style={{
-                    fontSize: RFValue(18),
+                    fontSize: 18,
                     // fontWeight: 'bold',
                     fontFamily: 'Lato-Bold',
                     color: this.state.textColorA,
@@ -808,7 +774,7 @@ export default class QuizNewStyle extends Component {
               ) : (
                 <Text
                   style={{
-                    fontSize: RFValue(18),
+                    fontSize: 18,
                     // fontWeight: 'bold',
                     fontFamily: 'Lato-Bold',
                     color: this.state.textColorB,
@@ -848,7 +814,7 @@ export default class QuizNewStyle extends Component {
                 ) : (
                   <Text
                     style={{
-                      fontSize: RFValue(18),
+                      fontSize: 18,
                       // fontWeight: 'bold',
                       fontFamily: 'Lato-Bold',
                       color: this.state.textColorC,
@@ -889,7 +855,7 @@ export default class QuizNewStyle extends Component {
                 ) : (
                   <Text
                     style={{
-                      fontSize: RFValue(18),
+                      fontSize: 18,
                       // fontWeight: 'bold',
                       color: this.state.textColorD,
                       fontFamily: 'Lato-Bold',
@@ -933,7 +899,7 @@ export default class QuizNewStyle extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: RFValue(60),
+                      fontSize: 60,
                       color: 'white',
                       fontFamily: 'Lato-Black',
                     }}>
@@ -941,7 +907,7 @@ export default class QuizNewStyle extends Component {
                   </Text>
                   <Text
                     style={{
-                      fontSize: RFValue(60),
+                      fontSize: 60,
                       color: 'white',
                       fontFamily: 'Lato-Black',
                     }}>
@@ -950,11 +916,11 @@ export default class QuizNewStyle extends Component {
                   <EIcon
                     name={'circle-with-cross'}
                     color="red"
-                    size={RFValue(80)}
+                    size={80}
                   />
                   <Text
                     style={{
-                      fontSize: RFValue(30),
+                      fontSize: 30,
                       color: 'white',
                       fontFamily: 'Lato-BoldItalic',
                     }}>
@@ -963,8 +929,8 @@ export default class QuizNewStyle extends Component {
                   <TouchableOpacity
                     style={{
                       backgroundColor: 'white',
-                      height: RFValue(50),
-                      width: RFValue(200),
+                      height: 50,
+                      width: 200,
                       borderRadius: 30,
                       borderColor: '000320',
                       borderWidth: 5,
@@ -976,7 +942,7 @@ export default class QuizNewStyle extends Component {
                     }}>
                     <Text
                       style={{
-                        fontSize: RFValue(15),
+                        fontSize: 15,
                         fontFamily: 'Lato-Black',
                         // fontWeight: '600',
                         color: 'black',
@@ -988,7 +954,7 @@ export default class QuizNewStyle extends Component {
                   </TouchableOpacity>
                   <Text
                     style={{
-                      fontSize: RFValue(30),
+                      fontSize: 30,
                       color: 'white',
                       fontFamily: 'Lato-BoldItalic',
                     }}>
@@ -997,8 +963,8 @@ export default class QuizNewStyle extends Component {
                   <TouchableOpacity
                     style={{
                       backgroundColor: 'white',
-                      height: RFValue(50),
-                      width: RFValue(200),
+                      height: 50,
+                      width: 200,
                       borderRadius: 30,
                       borderColor: '000320',
                       borderWidth: 5,
@@ -1010,7 +976,7 @@ export default class QuizNewStyle extends Component {
                     }}>
                     <Text
                       style={{
-                        fontSize: RFValue(15),
+                        fontSize: 15,
                         fontFamily: 'Lato-Black',
                         // fontWeight: '600',
                         color: 'black',
@@ -1067,11 +1033,11 @@ export default class QuizNewStyle extends Component {
                       <EIcon
                     name={'light-bulb'}
                     color="yellow"
-                    size={RFValue(80)}
+                    size={80}
                   />
                   <Text
                     style={{
-                      fontSize: RFValue(40),
+                      fontSize: 40,
                       fontFamily: 'Lato-Black',
                       color: 'white',
                       width: '90%',
@@ -1085,7 +1051,7 @@ export default class QuizNewStyle extends Component {
                   </Text>
                   <Text
                     style={{
-                      fontSize: RFValue(15),
+                      fontSize: 15,
                       fontFamily: 'Lato-Regular',
                       color: 'white',
                       width: '90%',
@@ -1098,7 +1064,7 @@ export default class QuizNewStyle extends Component {
 
                 <Text
                   style={{
-                    fontSize: RFValue(25),
+                    fontSize: 25,
                     fontFamily: 'Lato-Black',
                     color: 'white',
                     marginTop:"5%"
